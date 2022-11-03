@@ -4,11 +4,42 @@
 	<body>
     {% include 'topbar.html' %}
     <div id="main-content" style="position: relative;">
-      <form action="/game" method="get">
-        <input type="hidden" name="user_id" value="{{user_id}}">
-        <input type="hidden" name="game_id" value="{{game_id}}">
-        <button class="btn btn-primary" type="submit" style="position: absolute; top: 10px; right: 10px;">click here to refresh</button>
-      </form>
+      <div style="position: absolute; top: 10px; right: 10px; text-align: right;">
+        <form action="/game" method="get">
+          <input type="hidden" name="user_id" value="{{user_id}}">
+          <input type="hidden" name="game_id" value="{{game_id}}">
+          <button class="btn btn-primary" type="submit" style="margin-bottom: 10px;">click here to refresh</button>
+        </form>
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                Game info
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">Username</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for p_info in all_players_info %}
+                    <tr>
+                      <td>{{p_info['name']}}</td>
+                      <td>{{p_info['status']}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <h4>Username: {{username}}</h4>
       <p>Game id: {{game_id}}</p>
       <p>Round number: {{round_number}}</p>

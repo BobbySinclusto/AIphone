@@ -63,6 +63,22 @@ def game():
         ctx['round_number'] = round_number
         ctx['drawn_for'] = user_id
         user_ids = db.sql_fetchall('SELECT user_id, username FROM Players INNER JOIN Users ON Players.user_id = Users.id WHERE game_id = ?', (game_id,))
+
+        # Get status for each player
+        ctx['all_players_info'] = []
+        for user in user_ids:
+            current_user_id, current_user_name = user
+            res = db.sql_fetchone('SELECT working, ready FROM Turns WHERE user_id = ? AND round_id = ?', (current_user_id, round_id))
+            player_status = "writing prompt"
+            if res:
+                current_user_working, current_user_ready = res
+                if current_user_working:
+                    player_status = "waiting for image generation"
+                elif current_user_ready:
+                    player_status = "ready for next round"
+                else:
+                    player_status = "choosing image"
+            ctx['all_players_info'] += [{'name': current_user_name, 'status': player_status}]
         
         # If round number is equal to number of rounds, display results
         num_rounds = db.sql_fetchone('SELECT num_turns FROM Games WHERE id = ?', (game_id,))[0]
