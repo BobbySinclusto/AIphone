@@ -1,0 +1,32 @@
+-- Create room or join room page
+-- 
+-- Join a room using a room code
+-- (set up websockets somehow idk)
+-- 
+-- Start game, everyone gets a prompt input box
+
+-- Ok so here's the general idea for the first iteration:
+
+-- Put in your name and your game code
+
+-- Input prompt thing with submit button
+-- -> If last round (round number == num_players) then render compare page
+-- -> Show round number (start at 0)
+-- -> Show image to describe (if applicable)
+-- -> Check that working is not true (importnat!!)
+-- -> Clear image queue
+-- -> Takes you to check status page
+-- -> Puts your prompt in the queue
+-- -> Asynchronous worker do dad processes things in the queue sequentially (idk something should probably work)
+
+-- Check status page
+-- -> if everyone is ready already then go to next round
+-- -> Searches the dir for pictures that are being generated, adds them to the image_queue
+-- -> Each image has a choose button
+-- -> button to go back to input prompt page to replace current prompt
+-- -> refresh button
+
+-- Compare page
+-- -> Show images from each round grouped by player
+
+-- TODO: Make sure that there can be multiple images per turn and one selected or something (gen 10 at a time or something)

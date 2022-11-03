@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+	{% include 'head.html' %}
+	<body>
+    {% include 'topbar.html' %}
+    <div id="main-content" style="position: relative;">
+      <h4>Username: {{username}}</h4>
+      <p>Game id: {{game_id}}</p>
+      <p>Round number: {{round_number}}</p>
+
+      {% for player in player_rounds_list %}
+        <div class="card mb-3 player_round_card">
+          <h3 class="card-header">{{player['username']}}'s chain</h3>
+          <div class="card-body">
+            {% for round_info in player['rounds'] %}
+            <div class="card text-white bg-primary mb-3">
+            <div class="card-header">{{round_info['username']}}</div>
+            <div class="card-body image-card-thingy">
+              <p>{{round_info['prompt']}}</p>
+              <a href="javascript:pop('img{{round_info['image_id']}}');">
+                <img class="image_thingy" id="img{{round_info['image_id']}}" src="/images?id={{round_info['image_id']}}">
+              </a>
+            </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+      {% endfor %}
+
+        <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog" style="display: flex;">
+            <div class="modal-content w-100">
+              <div class="modal-body w-100">
+                <img src="" class="w-100" id="imagepreview" >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+	</body>
+</html>

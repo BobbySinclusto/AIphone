@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+	{% include 'head.html' %}
+	<body>
+    {% include 'topbar.html' %}
+    <div id="main-content">
+      <div id="login_container">
+        <form action="/login" method="get">
+          <legend>JOIN AN EXISTING GAME</legend>
+          <fieldset>
+            <div class="form-group">
+              <label for="username" class="form-label mt-4">Username</label>
+              <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+              <label for="game_id" class="form-label mt-4">Game ID</label>
+              <input type="text" class="form-control" id="game_id" name="game_id" placeholder="Enter game id" {% if game_id %}value="{{game_id}}"{% endif %}>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </fieldset>
+        </form>
+      </div>
+      {% if not game_id %}
+      <div id="new_game_container">
+        <form action="/create_game" method="get">
+          <legend>OR CREATE A NEW GAME</legend>
+          <fieldset>
+            <div class="form-group">
+              <label for="num_turns" class="form-label mt-4">Number of Turns</label>
+              <input type="text" class="form-control" id="num_turns" name="num_turns" placeholder="Enter number of turns">
+            </div>
+            <button type="submit" class="btn btn-primary">New Game</button>
+          </fieldset>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+	</body>
+</html>
