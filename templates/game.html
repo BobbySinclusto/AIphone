@@ -2,20 +2,22 @@
 <html lang="en">
 	{% include 'head.html' %}
 	<body>
+    <script src="/static/game.js"></script>
+    <script type="text/javascript" charset="utf-8">
+      socket.on('connect', function() {
+          socket.emit('join', {
+            username: {{username|tojson}},
+            user_id: {{user_id|tojson}}
+          });
+      });
+    </script>
     {% include 'topbar.html' %}
     <div id="main-content" style="position: relative;">
       <div style="position: absolute; top: 10px; right: 10px; text-align: right;">
-        <form action="/game" method="get">
-          <input type="hidden" name="user_id" value="{{user_id}}">
-          <input type="hidden" name="game_id" value="{{game_id}}">
-          <button class="btn btn-primary" type="submit" style="margin-bottom: 10px;">click here to refresh</button>
-        </form>
         <div class="accordion" id="accordionExample">
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                Game info
-              </button>
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">Game info</button>
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
               <div class="accordion-body">
@@ -35,6 +37,11 @@
                     {% endfor %}
                   </tbody>
                 </table>
+                <form action="/game" method="get">
+                  <input type="hidden" name="user_id" value="{{user_id}}">
+                  <input type="hidden" name="game_id" value="{{game_id}}">
+                  <button class="btn btn-primary" type="submit" style="margin-top: 10px;">click here to refresh</button>
+                </form>
               </div>
             </div>
           </div>
@@ -100,11 +107,6 @@
       {% endif %}
       {% if generated_images %}
         <h2>Images generated so far</h2>
-        <form action="/game" method="get">
-          <input type="hidden" name="user_id" value="{{user_id}}">
-          <input type="hidden" name="game_id" value="{{game_id}}">
-          <button class="btn btn-primary" type="submit">click here to refresh</button>
-        </form>
         <div id="images">
           {% for img in images %}
           <div class="card image-card-thingy">

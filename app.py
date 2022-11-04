@@ -1,13 +1,32 @@
 #!/usr/bin/env python3
 
-from email.mime import image
-from flask import Flask, send_file, render_template, send_from_directory, request, Response, redirect
-from config import STABLE_DIFFUSION_PATH, DATA_PATH
+from flask import Flask, send_file, render_template, send_from_directory, request, redirect
+from flask_socketio import SocketIO, join_room, leave_room, send
+from config import STABLE_DIFFUSION_PATH, DATA_PATH, FLASK_SECRET_KEY
 from game_db import GameDb
-import worker
-from util import update_images, get_images_path, get_current_round_id, get_current_round_number
+from worker import Worker
+from util import update_images, get_images_path, get_current_round_id, get_current_round_number, get_user_ids_for_game
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = FLASK_SECRET_KEY
+socketio = SocketIO(app)
+worker = Worker(socketio)
+
+# Join users to rooms based on their user_id so that messages are sent to the correct places
+# This is probably the wrong way to use this but it works lol
+@socketio.on('join')
+def on_join(data):
+    username = data['username']
+    room = data['user_id']
+    print(f"{username} joined")
+    join_room(room)
+
+@socketio.on('leave')
+def on_join(data):
+    username = data['username']
+    room = data['user_id']
+    leave_room(room)
+    print(f"{username} left")
 
 @app.route("/")
 def index():
@@ -33,6 +52,9 @@ def login():
             user_id = db.sql_fetchone('SELECT id FROM Users WHERE username = ?', (username,))[0]
             # Add user id to game
             db.sql_commit('INSERT OR IGNORE INTO Players (user_id, game_id) VALUES (?, ?)', (user_id, game_id))
+            # Notify existing users that a new player joined
+            for id in get_user_ids_for_game(game_id, db):
+                socketio.send(f"{username} joined", to=id)
             return redirect(f"/game?user_id={user_id}&game_id={game_id}")
 
 @app.route("/create_game", methods=['GET'])
@@ -153,6 +175,12 @@ def submit_prompt():
 
         # Generate new images
         worker.enqueue_prompt(drawn_for=drawn_for, game_id=game_id, num_images=num_images, prompt=prompt, round_number=round_number, user_id=user_id)
+
+        # Alert users that this user is generating images
+        username = db.sql_fetchone('SELECT username FROM Users WHERE id = ?', (user_id,))[0]
+        for id in get_user_ids_for_game(game_id, db):
+            socketio.send(f"{username} is generating their images", to=id)
+
         return redirect(f"/game?user_id={user_id}&game_id={game_id}")
 
 @app.route("/choose_image")
@@ -167,6 +195,12 @@ def choose_image():
         prompt = db.sql_fetchone('SELECT prompt FROM Images WHERE id = ?', (image_id,))[0]
         db.sql_commit('UPDATE Turns SET prompt = ?, ready = 1, image_id = ? WHERE round_id = ? and user_id = ?', (prompt, image_id, round_id, user_id))
 
+        # Alert users that this user is ready
+        username = db.sql_fetchone('SELECT username FROM Users WHERE id = ?', (user_id,))[0]
+        for id in get_user_ids_for_game(game_id, db):
+            print(f"Sending {username} is ready to {id}")
+            socketio.send(f"{username} is ready", to=id)
+
         # If all users are ready, update the round number
         if not db.sql_fetchall(
             '''
@@ -175,13 +209,17 @@ def choose_image():
                 LEFT JOIN (
                     SELECT * FROM Rounds
                     INNER JOIN Turns ON Rounds.id = Turns.round_id
-                    WHERE Rounds.round_number = ?
+                    WHERE Rounds.round_number = ? AND Rounds.id = ?
                 ) a ON a.user_id = Players.user_id
-                WHERE Players.game_id = ? AND a.round_id = ? AND (ready = 0 OR ready IS NULL)
+                WHERE Players.game_id = ? AND (ready = 0 OR ready IS NULL)
             ''', 
-            (round_number, game_id, round_id),
+            (round_number, round_id, game_id),
         ):
             db.sql_commit('INSERT INTO Rounds (round_number, game_id) VALUES (?, ?)', (round_number + 1, game_id))
+            # Reload all clients (move to next round)
+            for id in get_user_ids_for_game(game_id, db):
+                socketio.emit('reload', 'reload', to=id)
+
 
     return redirect(f"/game?user_id={user_id}&game_id={game_id}")
 
@@ -196,4 +234,4 @@ def send_static(path):
     return send_from_directory('static', path)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    socketio.run(app, debug=True, host='0.0.0.0')

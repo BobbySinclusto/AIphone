@@ -13,6 +13,6 @@ This is a super janky game that's basically sort of like Gartic Phone but with A
 1. Clone this repo and navigate to it
 2. Edit the config.py to have the correct directory for your stable-diffusion-docker directory (the other repo you cloned)
 3. Run `python3 -m pip install -r requirements.txt`
-4. Spin up the server `gunicorn -w2 --bind 0.0.0.0:5000 wsgi:app`
+4. Spin up the server `python3 app.py`
 
 HAVE FUN!

@@ -4,6 +4,9 @@ from pathlib import Path
 from game_db import GameDb
 from config import DATA_PATH
 
+def get_user_ids_for_game(game_id, db: GameDb) -> Sequence[str]:
+    return tuple(str(x[0]) for x in db.sql_fetchall('SELECT user_id FROM Players WHERE game_id = ?', (game_id,)))
+
 def get_current_round_number(game_id, db: GameDb):
     return db.sql_fetchone('SELECT MAX(round_number) FROM Rounds WHERE game_id = ?', (game_id,))[0]
 
