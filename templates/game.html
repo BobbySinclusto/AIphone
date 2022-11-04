@@ -56,13 +56,17 @@
           {% if prev_user_name %}
             <div class="card image-width-css-stuff">
               <h4 class="card-title">{{prev_user_name}}'s image</h4>
-              <img src="/images?id={{prev_user_image_id}}" class="w-100">
+              <a href="javascript:pop('img{{prev_user_image_id}}');">
+                <img src="/images?id={{prev_user_image_id}}" class="w-100">
+              </a>
             </div>
           {% endif %}
           {% if chosen_image_id %}
           <div class="card image-width-css-stuff">
             <h4 class="card-title">Chosen image</h4>
-            <img src="/images?id={{chosen_image_id}}" class="w-100">
+            <a href="javascript:pop('img{{chosen_image_id}}');">
+              <img src="/images?id={{chosen_image_id}}" class="w-100">
+            </a>
           </div>
           {% endif %}
       </div>
