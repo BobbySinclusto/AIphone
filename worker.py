@@ -73,8 +73,7 @@ class Worker:
             
                 # Notify clients that images have been generated
                 print('Done generating images, sending reload message via web socket')
-                for id in get_user_ids_for_game(game_id, db):
-                    self.socketio.emit('reload', 'reload', to=id)
+                self.socketio.emit('reload', 'reload', to=user_id)
 
             self.q.task_done()
 
