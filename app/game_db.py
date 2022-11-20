@@ -4,7 +4,7 @@ import subprocess
 
 
 class GameDb():
-    def __init__(self, file='game.db'):
+    def __init__(self, file='data/game.db'):
         self.file=file
 
         if not Path(file).exists():

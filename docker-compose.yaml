@@ -1,0 +1,52 @@
+version: "3.3"
+
+name: aiphone
+
+services:
+  app:
+    user: "${UID}:${GID}"
+    build: ./app
+    depends_on:
+      - redis
+    restart: always
+    volumes:
+      - type: bind
+        source: ./data
+        target: /aiphone/data
+    ports:
+      - 5000:5000
+    links:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+
+  image_generator:
+    user: "${UID}:${GID}"
+    build: ./image_generator
+    depends_on:
+      - redis
+    restart: always
+    volumes:
+      - type: bind
+        source: ./data
+        target: /image_generator/data
+      - type: bind
+        source: ./image_generator/stable-diffusion-v1-5
+        target: /image_generator/stable-diffusion-v1-5
+    links:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
+  
+  redis:
+    image: redis
+    restart: always
+    expose:
+      - "6379"
