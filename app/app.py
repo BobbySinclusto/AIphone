@@ -2,7 +2,7 @@
 
 from flask import Flask, send_file, render_template, send_from_directory, request, redirect
 from flask_socketio import SocketIO, join_room, leave_room, send
-from config import STABLE_DIFFUSION_PATH, DATA_PATH, FLASK_SECRET_KEY
+from config import DATA_PATH, FLASK_SECRET_KEY
 from game_db import GameDb
 from worker import Worker
 from util import update_images, get_images_path, get_current_round_id, get_current_round_number, get_user_ids_for_game
@@ -20,6 +20,7 @@ def on_join(data):
     room = data['user_id']
     print(f"{username} joined")
     join_room(room)
+    print(f"{username} joined room {room}")
 
 @socketio.on('leave')
 def on_join(data):
@@ -198,7 +199,6 @@ def choose_image():
         # Alert users that this user is ready
         username = db.sql_fetchone('SELECT username FROM Users WHERE id = ?', (user_id,))[0]
         for id in get_user_ids_for_game(game_id, db):
-            print(f"Sending {username} is ready to {id}")
             socketio.send(f"{username} is ready", to=id)
 
         # If all users are ready, update the round number
@@ -234,4 +234,4 @@ def send_static(path):
     return send_from_directory('static', path)
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, host='0.0.0.0')
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
