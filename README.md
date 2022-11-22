@@ -7,29 +7,21 @@ Before you can run AIphone using Docker, you'll have to get the NVIDIA Container
 
 ## Installation
 1. Sign up for an account on huggingface and agree to the model terms here: https://huggingface.co/runwayml/stable-diffusion-v1-5
-2. Clone this repo:
+2. Install `git-lfs` if you don't already have it
+3. Clone this repo:
 ```
 git clone https://github.com/BobbySinclusto/AIphone.git
 ```
-3. Change directories into it: 
+4. Change directories into `AIphone/image_generator`: 
 ```
-cd AIphone
+cd AIphone/image_generator
 ```
-4. Run 
-```
-python3 -m pip install -r requirements.txt
-```
-5. Install `git-lfs` if you don't already have it
-6. Change directories into the image_generator directory:
-```
-cd image_generator
-```
-7. Clone the huggingface repo (while still inside the AIphone directory): 
+5. Clone the huggingface repo (while still inside the AIphone directory): 
 ```
 git lfs install
 git clone https://huggingface.co/runwayml/stable-diffusion-v1-5
 ```
-8. Build the docker container:
+6. Build the docker container:
 ```
 UID=`id -u` GID=`id -g` docker compose build
 ```
