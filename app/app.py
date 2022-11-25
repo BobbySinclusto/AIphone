@@ -140,8 +140,9 @@ def game():
             while str(user_info[i][0]) != user_id:
                 prev_user = user_info[i]
                 i += 1
+            orig_user_name = user_info[i - round_number]
             prev_user_id, prev_user_name = prev_user
-            ctx['drawn_for'] = user_info[(i - round_number) % len(user_info)][0]
+            ctx['drawn_for'], ctx['drawn_for_name'] = user_info[(i - round_number) % len(user_info)]
             ctx['prev_user_name'] = prev_user_name
 
             ctx['prev_user_image_id'] = db.sql_fetchone('SELECT image_id FROM Turns INNER JOIN Rounds ON Turns.round_id = Rounds.id WHERE round_number = ? AND user_id = ? AND game_id = ?', (round_number - 1, prev_user_id, game_id))[0]

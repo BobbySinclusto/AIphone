@@ -13,7 +13,7 @@
     </script>
     {% include 'topbar.html' %}
     <div id="main-content" style="position: relative;">
-      <div style="position: absolute; top: 10px; right: 10px; text-align: right;">
+      <div style="position: absolute; top: 10px; right: 10px; text-align: right; z-index: 100;">
         <div class="accordion" id="accordionExample">
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
@@ -37,11 +37,6 @@
                     {% endfor %}
                   </tbody>
                 </table>
-                <form action="/game" method="get">
-                  <input type="hidden" name="user_id" value="{{user_id}}">
-                  <input type="hidden" name="game_id" value="{{game_id}}">
-                  <button class="btn btn-primary" type="submit" style="margin-top: 10px;">click here to refresh</button>
-                </form>
               </div>
             </div>
           </div>
@@ -55,7 +50,11 @@
       <div id="comparison_box" class="w-100">
           {% if prev_user_name %}
             <div class="card image-width-css-stuff">
-              <h4 class="card-title">{{prev_user_name}}'s image</h4>
+              {% if drawn_for_name == prev_user_name %}
+                <h4 class="card-title">{{prev_user_name}}'s image</h4>
+              {% else %}
+                <h4 class="card-title">{{prev_user_name}}'s interpretation of {{drawn_for_name}}'s image</h4>
+              {% endif %}
               <a href="javascript:pop('img{{prev_user_image_id}}');">
                 <img src="/images?id={{prev_user_image_id}}" class="w-100">
               </a>
