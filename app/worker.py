@@ -28,12 +28,12 @@ class Worker:
             # Update db
             with GameDb() as db:
                 round_id = get_current_round_id(game_id, db)
-                db.sql_commit('UPDATE Turns SET working = 1 WHERE user_id = ? AND round_id = ?', (user_id, round_id))
+                db.sql_commit('UPDATE Turns SET working = 0 WHERE user_id = ? AND round_id = ?', (user_id, round_id))
 
                 # Rename images and add them to the db
                 images_path = get_images_path(game_id=game_id, round_number=round_number, user_id=user_id)
                 update_images(images_path=images_path, prompt=prompt, drawn_for=drawn_for, db=db)
-            
+
             # Notify clients that images have been generated
             print('Done generating images, sending reload message via web socket')
             socketio.emit('reload', 'reload', to=user_id)

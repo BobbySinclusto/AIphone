@@ -14,10 +14,10 @@ pipe.to("cuda")
 def gen_images(prompt: Sequence[str], num_images: int, dir_path: Path):
     dir_path.mkdir(parents=True, exist_ok=True)
     i = 0
-    for img in pipe([prompt], num_images_per_prompt=num_images).images:
+    for img in pipe([prompt], num_images_per_prompt=num_images, num_inference_steps=35).images:
         # This has to be something other than just image_number.png because I'm too lazy to fix the other code
         img_path = dir_path.joinpath(f"{prompt[:20]}_{i}.png")
-        img.save(img_path) 
+        img.save(img_path)
         i += 1
 
 

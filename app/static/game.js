@@ -19,3 +19,11 @@ socket.addEventListener("message", (data) => {
 socket.addEventListener("reload", (data) => {
     location.reload();
 });
+
+socket.addEventListener("game_info", (data) => {
+    info_do_dad = document.getElementById("info_do_dad");
+    Array.from(info_do_dad.children).forEach((row, i) => {
+        row.children[0].textContent = data[i]["name"];
+        row.children[1].textContent = data[i]["status"];
+    });
+});
