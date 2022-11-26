@@ -31,16 +31,20 @@ def on_join(data):
 
 @app.route("/")
 def index():
+    invalid = request.args.get('invalid', '0') == '1'
     try:
         game_id = request.args['game_id']
-        return render_template("login.html", game_id = game_id)
+        return render_template("login.html", game_id = game_id, invalid = invalid)
     except KeyError as ex:
-        return render_template("login.html")
+        return render_template("login.html", invalid = invalid)
 
 @app.route("/login", methods=['GET'])
 def login():
     username = request.args['username']
     game_id = request.args['game_id']
+
+    if not username:
+        return redirect(f"/?game_id={game_id}&invalid=1")
 
     with GameDb() as db:
         # Create user account for user if they don't already have one
