@@ -1,12 +1,12 @@
 # AIphone
 
-This is a super janky game that's basically sort of like Gartic Phone but with AI generated images instead of drawing.
+This is a super cool game that's basically sort of like Gartic Phone but with AI generated images instead of drawing.
 
 ## Prerequisites
 Before you can run AIphone using Docker, you'll have to get the NVIDIA Container Toolkit set up and working. Follow the instructions here: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html
 
 ## Installation
-1. Sign up for an account on huggingface and agree to the model terms here: https://huggingface.co/runwayml/stable-diffusion-v1-5
+1. Sign up for an account on huggingface and agree to the model terms here: https://huggingface.co/stabilityai/stable-diffusion-2
 2. Install `git-lfs` if you don't already have it
 3. Clone this repo:
 ```
@@ -19,7 +19,7 @@ cd AIphone/image_generator
 5. Clone the huggingface repo (while still inside the AIphone directory): 
 ```
 git lfs install
-git clone https://huggingface.co/runwayml/stable-diffusion-v1-5
+git clone https://huggingface.co/stabilityai/stable-diffusion-2
 ```
 6. Build the docker container:
 ```

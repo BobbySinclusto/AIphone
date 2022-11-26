@@ -31,8 +31,8 @@ services:
         source: ./data
         target: /image_generator/data
       - type: bind
-        source: ./image_generator/stable-diffusion-v1-5
-        target: /image_generator/stable-diffusion-v1-5
+        source: ./image_generator/stable-diffusion-2
+        target: /image_generator/stable-diffusion-2
     links:
       - redis
     environment:
