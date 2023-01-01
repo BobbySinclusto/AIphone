@@ -4,8 +4,9 @@ name: aiphone
 
 services:
   app:
-    user: "${UID}:${GID}"
+    image: bobbysinclusto/aiphone-app:latest
     build: ./app
+    user: "${UID}:${GID}"
     depends_on:
       - redis
     restart: always
@@ -21,8 +22,9 @@ services:
       - REDIS_HOST=redis
 
   image_generator:
-    user: "${UID}:${GID}"
+    image: bobbysinclusto/aiphone-image_generator:latest
     build: ./image_generator
+    user: "${UID}:${GID}"
     depends_on:
       - redis
     restart: always
@@ -31,8 +33,8 @@ services:
         source: ./data
         target: /image_generator/data
       - type: bind
-        source: ./image_generator/stable-diffusion-v1-5
-        target: /image_generator/stable-diffusion-v1-5
+        source: ./image_generator/stable-diffusion-2-base
+        target: /image_generator/stable-diffusion-2-base
     links:
       - redis
     environment:

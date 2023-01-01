@@ -1,3 +1,5 @@
 __pycache__
 data
 image_generator/stable-diffusion-v1-5
+image_generator/stable-diffusion-2
+image_generator/stable-diffusion-2-base

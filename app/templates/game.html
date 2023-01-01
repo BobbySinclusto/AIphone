@@ -2,18 +2,9 @@
 <html lang="en">
 	{% include 'head.html' %}
 	<body>
-    <script src="/static/game.js"></script>
-    <script type="text/javascript" charset="utf-8">
-      socket.on('connect', function() {
-          socket.emit('join', {
-            username: {{username|tojson}},
-            user_id: {{user_id|tojson}}
-          });
-      });
-    </script>
     {% include 'topbar.html' %}
     <div id="main-content" style="position: relative;">
-      <div style="position: absolute; top: 10px; right: 10px; text-align: right;">
+      <div style="position: absolute; top: 10px; right: 10px; text-align: right; z-index: 100;">
         <div class="accordion" id="accordionExample">
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
@@ -28,7 +19,7 @@
                       <th scope="col">Status</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="info_do_dad">
                     {% for p_info in all_players_info %}
                     <tr>
                       <td>{{p_info['name']}}</td>
@@ -37,11 +28,6 @@
                     {% endfor %}
                   </tbody>
                 </table>
-                <form action="/game" method="get">
-                  <input type="hidden" name="user_id" value="{{user_id}}">
-                  <input type="hidden" name="game_id" value="{{game_id}}">
-                  <button class="btn btn-primary" type="submit" style="margin-top: 10px;">click here to refresh</button>
-                </form>
               </div>
             </div>
           </div>
@@ -55,17 +41,21 @@
       <div id="comparison_box" class="w-100">
           {% if prev_user_name %}
             <div class="card image-width-css-stuff">
-              <h4 class="card-title">{{prev_user_name}}'s image</h4>
-              <a href="javascript:pop('img{{prev_user_image_id}}');">
-                <img src="/images?id={{prev_user_image_id}}" class="w-100">
+              {% if drawn_for_name == prev_user_name %}
+                <h4 class="card-title">{{prev_user_name}}'s image</h4>
+              {% else %}
+                <h4 class="card-title">{{prev_user_name}}'s interpretation of {{drawn_for_name}}'s image</h4>
+              {% endif %}
+              <a href="javascript:pop('top_img{{prev_user_image_id}}');">
+                <img src="/images?id={{prev_user_image_id}}" id="top_img{{prev_user_image_id}}" class="w-100">
               </a>
             </div>
           {% endif %}
           {% if chosen_image_id %}
           <div class="card image-width-css-stuff">
             <h4 class="card-title">Chosen image</h4>
-            <a href="javascript:pop('img{{chosen_image_id}}');">
-              <img src="/images?id={{chosen_image_id}}" class="w-100">
+            <a href="javascript:pop('top_img{{chosen_image_id}}');">
+              <img src="/images?id={{chosen_image_id}}" id="top_img{{chosen_image_id}}" class="w-100">
             </a>
           </div>
           {% endif %}
@@ -87,6 +77,9 @@
                 {% endif %}
               </label>
               <textarea {% if generated_images %}disabled{% endif %} class="form-control" id="prompt" name="prompt" rows="3">{{prompt}}</textarea>
+                {% if not generated_images and not prev_user_image_id %}
+                  <button type="button" id="random_prompt_button" class="btn btn-primary">Generate random prompt</button>
+                {% endif %}
             </div>
             {% if not generated_images %}
               <input type="hidden" name="user_id" value="{{user_id}}">
@@ -133,5 +126,14 @@
           </div>
         </div>
       </div>
+      <script src="/static/game.js"></script>
+      <script type="text/javascript" charset="utf-8">
+        socket.on('connect', function() {
+            socket.emit('join', {
+              username: {{username|tojson}},
+              user_id: {{user_id|tojson}}
+            });
+        });
+      </script>
 	</body>
 </html>

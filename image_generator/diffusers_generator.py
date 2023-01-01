@@ -1,23 +1,24 @@
 from typing import Sequence
 import torch
-from diffusers import StableDiffusionPipeline
+from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 from pathlib import Path
 import redis
 import json
 import os
 
 r = redis.Redis(host=os.environ.get('REDIS_HOST', 'localhost'))
-pipe = StableDiffusionPipeline.from_pretrained("./stable-diffusion-v1-5", revision="fp16", torch_dtype=torch.float16, safety_checker=lambda images, *args, **kwargs: (images, False))
+pipe = StableDiffusionPipeline.from_pretrained("./stable-diffusion-2-base", revision="fp16", torch_dtype=torch.float16)
 pipe.to("cuda")
+pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
 
 
 def gen_images(prompt: Sequence[str], num_images: int, dir_path: Path):
     dir_path.mkdir(parents=True, exist_ok=True)
     i = 0
-    for img in pipe([prompt], num_images_per_prompt=num_images).images:
+    for img in pipe(prompt, num_images_per_prompt=num_images, num_inference_steps=25).images:
         # This has to be something other than just image_number.png because I'm too lazy to fix the other code
         img_path = dir_path.joinpath(f"{prompt[:20]}_{i}.png")
-        img.save(img_path) 
+        img.save(img_path)
         i += 1
 
 
