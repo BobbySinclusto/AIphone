@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 
-from flask import Flask, send_file, render_template, send_from_directory, request, redirect
+import eventlet
+eventlet.monkey_patch()  # Must be done before any other imports
+
+from flask import Flask, send_file, render_template, send_from_directory, request, redirect, abort
 from flask_socketio import SocketIO, join_room, leave_room, send
 from config import DATA_PATH, FLASK_SECRET_KEY
 from game_db import GameDb
 from worker import Worker
 from util import update_images, get_images_path, get_current_round_id, get_current_round_number, get_user_ids_for_game
+import requests
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = FLASK_SECRET_KEY
@@ -244,6 +248,13 @@ def choose_image():
 
 
     return redirect(f"/game?user_id={user_id}&game_id={game_id}")
+
+@app.route('/random_prompt', methods=['POST'])
+def random_prompt():
+    try:
+        return requests.post('https://www.aiprompt.io/prompts/').json()
+    except Exception as e:
+        return abort(503, str(e))
 
 @app.route('/images')
 def send_image():

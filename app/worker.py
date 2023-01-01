@@ -1,14 +1,11 @@
-from flask_socketio import SocketIO
 import eventlet
+from flask_socketio import SocketIO
 import redis
 import json
 import os
 
 from game_db import GameDb
 from util import get_current_round_id, get_images_path, update_images, get_user_ids_for_game
-
-
-eventlet.monkey_patch()
 
 
 class Worker:
