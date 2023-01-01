@@ -19,15 +19,11 @@ cd AIphone/image_generator
 5. Clone the huggingface repo (while still inside the AIphone directory): 
 ```
 git lfs install
-git clone https://huggingface.co/stabilityai/stable-diffusion-2
-```
-6. Build the docker container:
-```
-UID=`id -u` GID=`id -g` docker compose build
+git clone https://huggingface.co/stabilityai/stable-diffusion-2-base
 ```
 
 ### Running AIphone
-After building (see installation section) spin up the docker container with
+After getting the model files set up (see installation section) spin up the docker container with
 ```
 UID=`id -u` GID=`id -g` docker compose up
 ```
