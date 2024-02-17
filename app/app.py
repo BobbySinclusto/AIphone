@@ -251,8 +251,10 @@ def choose_image():
 
 @app.route('/random_prompt', methods=['POST'])
 def random_prompt():
+    if prompt := request.args.get('prompt'):
+        prompt = f'?prompt={prompt}'
     try:
-        return requests.post('https://www.aiprompt.io/prompts/').json()
+        return requests.get(f'http://prompt_generator:5000/get_prompt{prompt}').json()
     except Exception as e:
         return abort(503, str(e))
 

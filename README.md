@@ -16,10 +16,19 @@ git clone https://github.com/BobbySinclusto/AIphone.git
 ```
 cd AIphone/image_generator
 ```
-5. Clone the huggingface repo (while still inside the AIphone directory): 
+5. Clone the huggingface repo for stable diffusion (while still inside the AIphone directory): 
 ```
 git lfs install
 git clone https://huggingface.co/stabilityai/stable-diffusion-2-base
+```
+6. Change directories into `AIphone/prompt_generator`
+```
+cd ../prompt_generator
+```
+7. Clone the huggingface repo for the prompt generator (while still inside the AIphone directory): 
+```
+git lfs install
+git clone https://huggingface.co/Gustavosta/MagicPrompt-Stable-Diffusion
 ```
 
 ### Running AIphone

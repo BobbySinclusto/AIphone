@@ -78,7 +78,9 @@
               </label>
               <textarea {% if generated_images %}disabled{% endif %} class="form-control" id="prompt" name="prompt" rows="3">{{prompt}}</textarea>
                 {% if not generated_images and not prev_user_image_id %}
-                  <button type="button" id="random_prompt_button" class="btn btn-primary">Generate random prompt</button>
+                  <!-- 
+                      <button type="button" id="random_prompt_button" class="btn btn-primary">Generate random prompt</button>
+                  -->
                 {% endif %}
             </div>
             {% if not generated_images %}
