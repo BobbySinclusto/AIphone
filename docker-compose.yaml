@@ -1,0 +1,16 @@
+version: "3.3"
+
+name: aiphone
+
+services:
+  app:
+    image: bobbysinclusto/aiphone-app:latest
+    build: ./app
+    user: "${UID}:${GID}"
+    restart: always
+    volumes:
+      - type: bind
+        source: ./data
+        target: /aiphone/data
+    ports:
+      - 5000:5000

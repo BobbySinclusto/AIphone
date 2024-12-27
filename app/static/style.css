@@ -1,0 +1,33 @@
+#images {
+    display: flex;
+    flex-wrap: wrap;
+}
+#submit-box-thing {
+    display: flex;
+    flex-wrap: wrap;
+}
+#num_images {
+    width: 20vw;
+}
+.image-card-thingy {
+    padding: 10px;
+}
+.image_thingy {
+    width: 20vw;
+}
+.image-width-css-stuff {
+    width: 30vw;
+    margin-left: 10px;
+    padding: 10px;
+}
+#main-content {
+    padding: 10px;
+}
+.player_round_card {
+    margin-bottom: 20px;
+}
+#comparison_box {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}

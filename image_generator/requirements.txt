@@ -1,0 +1,6 @@
+diffusers
+scipy
+ftfy
+accelerate
+redis
+
